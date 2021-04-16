@@ -1,5 +1,8 @@
-package main
+package model
+/**
+type Status string
 
-func main() {
-	$END$
-}
+const (
+	TRANSFERRED Status = "TRANSFERRED"
+	IN_PROCESS Status = "IN_PROCESS"
+)**/

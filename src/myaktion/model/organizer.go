@@ -1,8 +1,8 @@
 package model
 
-type Organizor struct {
-	Email string
-	LastName string
-	Passwort string
-	FirstName string
+type Organizer struct {
+	Email string `json:"email"`
+	LastName string `json:"lastName"`
+	Passwort string `json:"passwort"`
+	FirstName string `json:"firstName"`
 }
