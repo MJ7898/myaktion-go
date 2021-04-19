@@ -9,6 +9,7 @@ import (
 )
 
 func init() {
+	// defer db.Init()
 	// init logger
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetReportCaller(true)
@@ -29,6 +30,7 @@ func main() {
 	router.HandleFunc("/campaigns/{id}", handler.GetCampaign).Methods("GET")
 	router.HandleFunc("/campaigns/{id}", handler.UpdateCampaign).Methods("PUT")
 	router.HandleFunc("/campaigns/{id}", handler.DeleteCampaign).Methods("DELETE")
+	router.HandleFunc("/campaigns/{id}/donation", handler.AddDonation).Methods("POST")
 	if err := http.ListenAndServe(":8000", router); err != nil {
 		log.Fatal(err)
 	}

@@ -51,7 +51,7 @@ func GetCampaign(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	campaign, err := service.GetCampaignById(id)
+	campaign, err := service.GetCampaign(id)
 	if campaign == nil {
 		http.Error(w, "404 Campaign not found", http.StatusNotFound)
 		return
