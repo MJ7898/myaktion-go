@@ -9,23 +9,29 @@ import (
 )
 
 func CreateCampaign(w http.ResponseWriter, r *http.Request) {
-	var campaign *model.Campaign
 	campaign, err := getCampaign(r)
 	if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := service.CreateCampaign(campaign); err != nil { // call servcie function for campaign
-		log.Printf("Error calling service CreateCampaign: %v", err)
+	log.Infof("campaign: %v", campaign)
+	if err := service.CreateCampaign(campaign); err != nil {
+		log.Errorf("Error calling service CreateCampaign: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(campaign); err != nil { // send JSON of campaign as response
-		log.Printf("Failure encoding value to JSON: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	sendJson(w, campaign)
+}
+
+func getCampaign(r *http.Request) (*model.Campaign, error) {
+	var campaign model.Campaign
+	// TODO: log http body as middleware
+	err := json.NewDecoder(r.Body).Decode(&campaign)
+	if err != nil {
+		log.Errorf("Can't serialize request body to campaign struct: %v", err)
+		return nil, err
+	}
+	return &campaign, nil
 }
 
 func GetCampaigns(w http.ResponseWriter, _ *http.Request) {
@@ -102,14 +108,4 @@ func DeleteCampaign(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	sendJson(w, result{Success: "Success (Ok)"})
-}
-
-func getCampaign(r *http.Request) (*model.Campaign, error) {
-	var campaign model.Campaign
-	err := json.NewDecoder(r.Body).Decode(&campaign)
-	if err != nil {
-		log.Errorf("Can't serialize request body to campaign struct: %v", err)
-		return nil, err
-	}
-	return &campaign, nil
 }

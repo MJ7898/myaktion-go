@@ -16,7 +16,7 @@ type Campaign struct {
 
 func (c *Campaign) AfterFind(tx *gorm.DB) (err error)  {
 	var sum float64
-	result := tx.Model(&Donation{}).Select("ifnull(sim(amount),0)").Where("campaign_id = ?", c.ID).Scan(&sum)
+	result := tx.Model(&Donation{}).Select("ifnull(sum(amount),0)").Where("campaign_id = ?", c.ID).Scan(&sum)
 	if result.Error != nil {
 		return result.Error
 	}

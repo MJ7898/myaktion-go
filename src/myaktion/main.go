@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/MJ7898/myaktion-go/src/myaktion/db"
 	"github.com/MJ7898/myaktion-go/src/myaktion/handler"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -9,7 +10,8 @@ import (
 )
 
 func init() {
-	// defer db.Init()
+	// init database
+	defer db.Init()
 	// init logger
 	log.SetFormatter(&log.TextFormatter{})
 	log.SetReportCaller(true)
@@ -31,6 +33,7 @@ func main() {
 	router.HandleFunc("/campaigns/{id}", handler.UpdateCampaign).Methods("PUT")
 	router.HandleFunc("/campaigns/{id}", handler.DeleteCampaign).Methods("DELETE")
 	router.HandleFunc("/campaigns/{id}/donation", handler.AddDonation).Methods("POST")
+	go monitortransactions()
 	if err := http.ListenAndServe(":8000", router); err != nil {
 		log.Fatal(err)
 	}

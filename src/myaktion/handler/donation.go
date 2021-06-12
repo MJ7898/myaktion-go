@@ -22,13 +22,15 @@ func AddDonation(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	//_, err = ...
-	campaign, err := service.AddDonation(campaignId, donation)
+	//campaign, err := service.AddDonation(campaignId, donation)
+	// TODO: if the campaign doesn't exist, return 404 - don't show FK error
+	err = service.AddDonation(campaignId, donation)
 	if err != nil {
 		log.Errorf("Failure adding donation to campaign with ID %v: %v", campaignId, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sendJson(w, campaign) // donation instead
+	sendJson(w, donation) // donation instead
 }
 
 func getDonation(r *http.Request) (*model.Donation, error) {
